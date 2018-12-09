@@ -30,7 +30,9 @@ public:
 	void ProcessUsers(const std::vector<s64>& userIds);
 	void ProcessScores(const std::vector<s64>& scoreIds);
 
-private:
+	void SignalCompletion();
+
+  private:
 	static const Beatmap::ERankedStatus s_minRankedStatus;
 	static const Beatmap::ERankedStatus s_maxRankedStatus;
 
@@ -84,6 +86,9 @@ private:
 
 	std::shared_ptr<DatabaseConnection> newDBConnectionMaster();
 	std::shared_ptr<DatabaseConnection> newDBConnectionSlave();
+
+	// Whether the DOCKER environment variable is set
+	bool isDocker;
 
 	// Difficulty data is held in RAM.
 	// A few hundred megabytes.

@@ -85,6 +85,7 @@ int main(s32 argc, char* argv[])
 
 			Processor processor{ToGamemode(args::get(modePositional)), args::get(configFlag)};
 			processor.ProcessAllUsers(!continueFlag, numThreads);
+			processor.SignalCompletion();
 		});
 
 		args::Command usersCommand(commands, "users", "Compute pp of specific users", [&](args::Subparser& parser)
@@ -99,6 +100,7 @@ int main(s32 argc, char* argv[])
 
 			Processor processor{ToGamemode(args::get(modePositional)), args::get(configFlag)};
 			processor.ProcessUsers(args::get(usersPositional));
+			processor.SignalCompletion();
 		});
 
 		args::Command scoresCommand(commands, "scores", "Compute pp of specific scores", [&](args::Subparser& parser)
@@ -113,6 +115,7 @@ int main(s32 argc, char* argv[])
 
 			Processor processor{ToGamemode(args::get(modePositional)), args::get(configFlag)};
 			processor.ProcessScores(args::get(scoresPositional));
+			processor.SignalCompletion();
 		});
 
 		args::GlobalOptions argumentsGlobal{parser, argumentsGroup};

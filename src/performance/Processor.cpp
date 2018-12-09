@@ -31,7 +31,7 @@ Processor::Processor(EGamemode gamemode, const std::string& configFile)
 	_pDataDog = std::make_unique<DDog>(_config.DataDogHost, _config.DataDogPort);
 	_pDataDog->Increment("osu.pp.startups", 1, {StrFormat("mode:{0}", GamemodeTag(_gamemode))});
 
-	bool isDocker = std::getenv("DOCKER") != NULL;
+	isDocker = std::getenv("DOCKER") != NULL;
 
 	if (isDocker)
 	{
@@ -66,9 +66,6 @@ Processor::Processor(EGamemode gamemode, const std::string& configFile)
 	queryBeatmapBlacklist();
 	queryBeatmapDifficultyAttributes();
 	queryAllBeatmapDifficulties(16);
-
-	if (isDocker)
-		storeCount(*_pDB, "docker_db_step", 3);
 }
 
 Processor::~Processor()
@@ -405,6 +402,12 @@ void Processor::ProcessScores(const std::vector<s64>& scoreIds)
 	}
 
 	tlog::info() << "================================================================================";
+}
+
+void Processor::SignalCompletion()
+{
+	if (isDocker)
+		storeCount(*_pDB, "docker_db_step", 3);
 }
 
 void Processor::readConfig(const std::string& filename)
