@@ -157,10 +157,15 @@ void OsuScore::computeSpeedValue(const Beatmap& beatmap)
 	if ((_mods & EMods::Hidden) > 0)
 		_speedValue *= 1.0f + 0.04f * (12.0f - approachRate);
 
-	// Scale the speed value with accuracy _slightly_
-	_speedValue *= 0.5f + Accuracy() / 2.0f;
-	// It is important to also consider accuracy difficulty when doing that
-	_speedValue *= 0.98f + (pow(beatmap.DifficultyAttribute(_mods, Beatmap::OD), 2) / 2500);
+	// Scale the speed value with accuracy and OD.
+	_speedValue *= (
+		1.0f / (
+			1.0f + pow(
+				exp(1.0f),
+				-20.0f * (Accuracy() +
+					  pow(beatmap.DifficultyAttribute(_mods, Beatmap::OD), 2.0f) / 2310.0f
+					  - 0.8733f
+                    )))) / 1.89f + pow(beatmap.DifficultyAttribute(_mods, Beatmap::OD), 2.0f) / 5000.0f + 0.49f;
 }
 
 void OsuScore::computeAccValue(const Beatmap& beatmap)
